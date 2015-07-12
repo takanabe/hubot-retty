@@ -14,8 +14,7 @@
 # Author:
 #   Takayuki WATANABE <takanabe.w@gmail.com>
 
-cheerio = require 'cheerio'
-request = require 'request'
+client = require('cheerio-httpcli')
 
 module.exports = (robot) ->
 
@@ -23,17 +22,20 @@ module.exports = (robot) ->
 
     # send HTTP request
     base_url = 'http://user.retty.me/105513/ikitai/ARE13'
-    request base_url, (_, res) ->
-
-      # parse response body
-      $ = cheerio.load res.body
+    client.fetch base_url, {}, (err, $, res) ->
       wannago_lists = []
-      $('.my_wish_list .restaurant_name_section a').each ->
-        a = $ @
-        url =  a.attr('href')
-        name = a.text()
-        wannago_lists.push { url, name }
+      # parse response body
+      $('.my_wish_list .restaurant_name_section a').each ()->
+        url = $(this).attr('href')
+        name = $(this).text()
+        information_list = []
+        $(this).parents('.restaurant_title_area').children('.restaurant_info_section').find('a').each ()->
+          restaurant_info = $(this).text()
+          # console.log restaurant_info
+          information_list.push restaurant_info
 
+        detail = information_list.join()
+        wannago_lists.push {url, name, detail}
       # filter wanna go lists
       filtered = wannago_lists.filter (w) ->
         if query? then w.name.match(new RegExp(query, 'i')) else true
@@ -41,7 +43,7 @@ module.exports = (robot) ->
       # format wanna go lists
       message = filtered
         .map (w) ->
-          "#{w.name} #{w.url}"
-        .join '\n'
+          "#{w.name} #{w.url}\n #{w.detail}"
+        .join '\n\n'
 
       msg.send message
