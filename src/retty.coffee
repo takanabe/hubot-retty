@@ -18,6 +18,8 @@ client = require('cheerio-httpcli')
 
 module.exports = (robot) ->
 
+#Commands:
+#  hubot retty - Displays Retty wanna go list.
   robot.respond /retty$/i, (msg) ->
 
     # send HTTP request
