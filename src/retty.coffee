@@ -5,8 +5,7 @@
 #   LIST_OF_ENV_VARS_TO_SET
 #
 # Commands:
-#   hubot hello - <what the respond trigger does>
-#   orly - <what the hear trigger does>
+#   hubot retty - Displays Retty wanna go list.
 #
 # Notes:
 #   <optional notes required for the script>
@@ -18,10 +17,7 @@ client = require('cheerio-httpcli')
 
 module.exports = (robot) ->
 
-#Commands:
-#  hubot retty - Displays Retty wanna go list.
   robot.respond /retty$/i, (msg) ->
-
     # send HTTP request
     base_url = 'http://user.retty.me/105513/ikitai/ARE13'
     client.fetch base_url, {}, (err, $, res) ->
