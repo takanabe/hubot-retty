@@ -1,8 +1,5 @@
 # hubot-retty
-
-A hubot script that provide information listed in Retty wanna go lists.
-
-See [`src/retty.coffee`](src/retty.coffee) for full documentation.
+hubot-retty is a hubot script that display information regitstered in Retty wanna go lists.
 
 ## Installation
 
@@ -17,6 +14,23 @@ Then add **hubot-retty** to your `external-scripts.json`:
   "hubot-retty"
 ]
 ```
+
+## Usage
+Find your favorite user from ![Retty user seach] and select `①行きたいお店`show in follwing picture. Then, you can find the user's unique ②URL that shows us wanna go list.
+
+![favorite user's wanna go list](./images/find_favorit_wannago_list.png)
+
+Set Retty ②URL
+
+```
+#node_modules/hubot-retty/src/retty.coffee
+
+    # send HTTP request
+    base_url = '②RETTY_WANNA_GO_LIST_URL'
+    client.fetch base_url, {}, (err, $, res) ->
+
+```
+Now, we can use hubot-retty script.
 
 ## Sample Interaction
 
@@ -45,3 +59,6 @@ hubot>>
  田町 洋食,田町 定食
 
 ```
+
+## In the future ...
+This hubot script will be changed when Retty release public API.
