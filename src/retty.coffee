@@ -6,6 +6,9 @@
 #
 # Commands:
 #   hubot retty  - Display Retty wanna go list.
+#   hubot retty cancel username - Add a username to today's lunch attendee_list.
+#   hubot retty join username - Add a username to today's lunch attendee_list.
+#   hubot retty show attendees - Display attendees' name.
 #   hubot retty select number - Display restaurant detailed information.
 #   hubot retty select random - Display restaurant detailed information randomly.
 #
@@ -129,3 +132,28 @@ module.exports = (robot) ->
              content_list.push content
 
         msg.send content_list.join '\n'
+
+  KEY_RETTY = 'retty'
+
+  # Slackのユーザ名から自動的に取得したい
+  robot.respond /retty\sjoin\s(.+)$/i, (msg) ->
+    name  = msg.match[1]
+    attendee_list = (robot.brain.get KEY_RETTY) ? []
+    attendee_list.push name
+
+    robot.brain.set KEY_RETTY, attendee_list
+
+    msg.send "本日のランチに#{attendee_list[attendee_list.length-1]}が参加します!!\n参加者は#{attendee_list}になりました"
+
+  robot.respond /retty\scancel\s(.+)$/i, (msg) ->
+    name  = msg.match[1]
+    attendee_list = (robot.brain.get KEY_RETTY) ? []
+    attendee_list.splice(attendee_list.indexOf(name),1)
+
+    robot.brain.set KEY_RETTY, attendee_list
+    msg.send "#{name}がランチに参加できなくなりましたorz\n参加者は#{attendee_list}になりました"
+
+  robot.respond /retty\sshow\sattendees$/i, (msg) ->
+    attendee_list = (robot.brain.get KEY_RETTY) ? []
+
+    msg.send "今日のランチ参加者は#{attendee_list}です!!"
